@@ -24,6 +24,7 @@ hash_table.remove("b");         // remove the mapping for 2
 hash_table.get("b");            // returns -1 (not found)
 ```
 """
+# linked-list class constructor:
 class ListNode:
     def __init__(self, key, value):
         self.key = key
@@ -31,22 +32,57 @@ class ListNode:
         self.next = None
 
 class MyHashTable:
-    def __init__(self):
-        # Your code here
 
-       
-    # Your code here
+    def __init__(self, capacity=8):
+        self.storage = [None] * capacity
+        self.capacity = capacity
+        self.item_count = 0
 
-    
-    
-    def put(self, key, value):
-        # Your code here
+    def hash(self, key):
+        # DJB2 standard hashing function
+        str_key = str(key).encode()
+
+        # start with arbitrarily large prime
+        hash_value = 5381
+
+        # Bit shift
+        for b in str_key:
+            hash_value = ((hash_value << 5) + hash_value) + b
+            hash_value &= 0xffffffff
+
+        return hash_value % self.capacity
 
 
     def get(self, key):
-        # Your code here
+
+        index = self.hash(key)
+        return self.storage[index][1]
+
+    def put(self, key, value):
+        index = self.hash(key)
+        
+        # look through the linked list at storage[index] to see if this key is already in the table
+        currentNode = self.storage[index]
+        while currentNode:
+            if currentNode.key == key: # found a key in list
+                #update the value
+                currentNode.value = value
+                return
+            currentNode = currentNode.next
+
+        # otherwise, append a new ListNode with the key and value
+        newNode = ListNode(key, value)
+        newNode.next = self.storage[index]
+        self.storage[index] = newNode
+        
+
+    def delete(self, key):
+        index = self.hash(key)
+        if self.storage[index] != None:
+            self.item_count -= 1
+        self.storage[index] = None
 
 
-    def remove(self, key: int) -> None:
-        # Your code here
-
+        # # Increment the item count(if there wasn't something there before)
+        # if self.storage[index] == None:
+        #     self.item_count += 1
