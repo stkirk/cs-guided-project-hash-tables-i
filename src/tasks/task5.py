@@ -8,7 +8,7 @@ def avgScore(scores):
 
     # order scores by score[1] in descending order
     scores.sort(reverse=True, key=lambda value : value[1])
-    print("sorted scores-->", scores)
+    # print("sorted scores-->", scores)
     # loop through score in scores
     for score in scores:
         # instantiate variables for student_id and test_score
